@@ -2,7 +2,19 @@ import "./globals.css";
 import { Routes, Route } from "react-router-dom";
 import SignInForm from "./_auth/forms/SignInForm";
 import SignUpForm from "./_auth/forms/SignUpForm";
-import { Home } from "./_root/pages";
+import {
+  Home,
+  Explore,
+  CreatePost,
+  People,
+  Saved,
+  EditPost,
+  UpdateProfile,
+  AllUsers,
+  Profile,
+  LikedPosts,
+  PostDetails,
+} from "./_root/pages";
 import AuthLayout from "./_auth/AuthLayout";
 import RouteLayout from "./_root/RootLayout";
 import { Toaster } from "@/components/ui/toaster";
@@ -21,6 +33,16 @@ const App = (props: Props) => {
         {/* Private Routes */}
         <Route element={<RouteLayout />}>
           <Route index element={<Home />} />
+          <Route path="explore" element={<Explore />} />
+          <Route path="all-users" element={<People />} />
+          <Route path="saved" element={<Saved />} />
+          <Route path="create-post" element={<CreatePost />} />
+          <Route path="edit-post" element={<EditPost />} />
+          <Route path="update-profile" element={<UpdateProfile />} />
+          <Route path="all-users" element={<AllUsers />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="liked-posts" element={<LikedPosts />} />
+          <Route path="post-details" element={<PostDetails />} />
         </Route>
       </Routes>
       <Toaster />

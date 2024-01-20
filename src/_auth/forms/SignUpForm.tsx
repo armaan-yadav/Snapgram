@@ -16,10 +16,9 @@ import Loader from "@/components/shared/Loader";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import {
-  useCreateUserAccountMutation,
+  useCreateUserAccount,
   useSignInAccount,
 } from "@/lib/tanstack-query/queriesAndMutations";
-import { useContext } from "react";
 import { useUserContext } from "@/components/context/AuthContext";
 
 type Props = {};
@@ -28,12 +27,11 @@ const SignUpForm = (props: Props) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   // const isLoading = false;
-  const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
+  const { checkAuthUser } = useUserContext();
 
   const { mutateAsync: createUserAccount, isPending: isCreating } =
-    useCreateUserAccountMutation();
-  const { mutateAsync: signInAccount, isPending: isSigningIn } =
-    useSignInAccount();
+    useCreateUserAccount();
+  const { mutateAsync: signInAccount } = useSignInAccount();
   const form = useForm<z.infer<typeof SignUpValidation>>({
     resolver: zodResolver(SignUpValidation),
     defaultValues: {
@@ -46,25 +44,23 @@ const SignUpForm = (props: Props) => {
 
   async function onSubmit(values: z.infer<typeof SignUpValidation>) {
     const newUser = await createUserAccount(values);
+    console.log(newUser);
     if (!newUser)
-      return toast({ description: "Sign Up failed. Please try again" });
-
+      return toast({ description: "Sign Up failed. Please try again." });
     const session = signInAccount({
       email: values.email,
       password: values.password,
     });
-
     if (!session) {
-      return toast({ description: "Sign In Failed. Please try again" });
+      return toast({ description: "Sign In Failed. Please try again." });
     }
-
+    console.log(session);
     const isLoggedIn = await checkAuthUser();
-
     if (isLoggedIn) {
       form.reset();
       navigate("/");
     } else {
-      return toast({ description: "Sign Up failed. Please try again" });
+      return toast({ description: "Sign Up failed. Please try again." });
     }
   }
   return (

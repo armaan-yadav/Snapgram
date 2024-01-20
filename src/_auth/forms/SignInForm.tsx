@@ -13,12 +13,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { SignInValidation, SignUpValidation } from "@/lib/validation";
 import Loader from "@/components/shared/Loader";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { signInAccount } from "@/lib/appwrite/api";
+import { toast } from "@/components/ui/use-toast";
+import { useUserContext } from "@/components/context/AuthContext";
+import { useSignInAccount } from "@/lib/tanstack-query/queriesAndMutations";
 type Props = {};
 
 const SignUpForm = (props: Props) => {
-  const isLoading = false;
+  const navigate = useNavigate();
+  const { checkAuthUser } = useUserContext();
   const form = useForm<z.infer<typeof SignInValidation>>({
     resolver: zodResolver(SignInValidation),
     defaultValues: {
@@ -26,15 +30,21 @@ const SignUpForm = (props: Props) => {
       password: "",
     },
   });
+  const { mutateAsync: signInAccount, isPending: isSigningIn } =
+    useSignInAccount();
 
   async function onSubmit(values: z.infer<typeof SignInValidation>) {
-    try {
-      const session = await signInAccount(values);
-      return session;
-    } catch (error) {
-      console.log(error);
+    const session = await signInAccount(values);
+    if (!session) {
+      return toast({ description: "Sign In failed. Please try again." });
     }
-    console.log(values);
+    const isLoggedIn = await checkAuthUser();
+    if (isLoggedIn) {
+      form.reset();
+      navigate("/");
+    } else {
+      return toast({ description: "Sign In failed. Please try again." });
+    }
   }
   return (
     <Form {...form}>
@@ -82,7 +92,7 @@ const SignUpForm = (props: Props) => {
             </p>
           </Link>
           <Button type="submit" className="w-full shad-button_primary">
-            {isLoading ? <Loader /> : <div>Sign In</div>}
+            {isSigningIn ? <Loader /> : <div>Sign In</div>}
           </Button>
         </form>
       </div>

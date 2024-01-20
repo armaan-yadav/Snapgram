@@ -34,6 +34,7 @@ export async function saveUserToDB(user: {
   username?: string;
   imageUrl: URL;
 }) {
+  console.log(appwriteConfig.databaseId);
   try {
     const newUser = await database.createDocument(
       appwriteConfig.databaseId,
@@ -56,6 +57,14 @@ export const signInAccount = async ({
 }) => {
   try {
     const session = await account.createEmailSession(email, password);
+    return session;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const signOutAccount = async () => {
+  try {
+    const session = await account.deleteSession("current");
     return session;
   } catch (error) {
     console.log(error);
