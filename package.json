@@ -21,9 +21,12 @@
     "lucide-react": "^0.312.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-dropzone": "^14.2.3",
     "react-hook-form": "^7.49.3",
     "react-router-dom": "^6.21.2",
+    "shad": "^1.0.0",
     "tailwind-merge": "^2.2.0",
+    "textarea": "^0.3.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
