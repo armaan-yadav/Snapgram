@@ -5,18 +5,16 @@ import {
   useSavePost,
 } from "@/lib/tanstack-query/queriesAndMutations";
 import { Models } from "appwrite";
-import { useUserContext } from "../context/AuthContext";
 import React, { useEffect, useState } from "react";
 import { checkIsLiked } from "@/lib/utils";
-import { Scale } from "lucide-react";
 import Loader from "./Loader";
 
 type PostStatsProps = {
-  post: Models.Document;
+  post?: Models.Document;
   userId: string;
 };
 const PostStats = ({ post, userId }: PostStatsProps) => {
-  const likesList = post.likes.map((user: Models.Document) => user.$id);
+  const likesList = post?.likes.map((user: Models.Document) => user.$id);
   const [likes, setLikes] = useState(likesList);
   const [isSaved, setIsSaved] = useState(false);
   const { mutateAsync: likePost } = useLikedPost();
@@ -25,7 +23,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
     useDeleteSavedPost();
   const { data: currentUser } = useGetCurrentUser();
   const savedPostRecord = currentUser?.save.find(
-    (record: Models.Document) => record.post.$id == post.$id
+    (record: Models.Document) => record.post.$id == post?.$id
   );
   useEffect(() => {
     setIsSaved(savedPostRecord ? true : false);
@@ -44,7 +42,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
     }
 
     setLikes(newLikes);
-    likePost({ postId: post.$id, likesArray: newLikes });
+    likePost({ postId: post?.$id || "", likesArray: newLikes });
   };
   const handleSavePost = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -54,11 +52,11 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
       deletePost({ savedPostId: savedPostRecord.$id });
       return;
     }
-    savePost({ postId: post.$id, userId: userId });
+    savePost({ postId: post?.$id || "", userId: userId });
     setIsSaved(false);
   };
   return (
-    <div className="flex justify-between items-center z-20">
+    <div className="flex justify-between items-center z-20 ">
       <div className="flex gap-2 mr-5">
         <img
           src={

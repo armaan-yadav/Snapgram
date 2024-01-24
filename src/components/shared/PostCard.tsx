@@ -47,7 +47,7 @@ const PostCard = ({ post }: { post: Models.Document }) => {
           </Link>
         </div>
       </div>
-      <Link to={`posts/${post.$id}`}>
+      <Link to={`post-details/${post.$id}`}>
         <img
           src={post.imageUrl || `/assets/icons/profile-placeholder.svg`}
           alt=""

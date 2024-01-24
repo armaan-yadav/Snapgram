@@ -1,7 +1,6 @@
-import { INewPost, INewUser } from "@/types";
+import { INewPost, INewUser, IUpdatePost } from "@/types";
 import { account, appwriteConfig, avatars, database, storage } from "./config";
 import { Query, ID } from "appwrite";
-
 export async function createUserAccount(user: INewUser) {
   try {
     const newAccount = await account.create(
@@ -213,6 +212,175 @@ export const deleteSavedPost = async (savedPostId: string) => {
     );
     if (!statusCode) throw Error;
     return { status: "ok" };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getPostById = async (postId: string) => {
+  try {
+    const postDetails = await database.getDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.postsCollectionId,
+      postId
+    );
+    if (!postDetails) throw Error;
+    return postDetails;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updatePost = async (post: IUpdatePost) => {
+  const hasFileToUpdate = post.file.length > 0;
+  try {
+    let image = {
+      imageId: post.imageId,
+      imageUrl: post.imageUrl,
+    };
+
+    if (hasFileToUpdate) {
+      //uploading the new file
+      const uploadedFile = await uploadFile(post.file[0]);
+      if (!uploadedFile) throw Error;
+      //getting the url of the new uploaded file
+      const fileUrl = await getFilePreview(uploadedFile.$id);
+      //deleting the uploaded file if we don't get the file preview
+      if (!fileUrl) {
+        storage.deleteFile(appwriteConfig.storageId, uploadedFile.$id);
+        throw Error;
+      }
+      image = { ...image, imageId: uploadedFile?.$id!, imageUrl: fileUrl! };
+    }
+    const tags = post.tags?.replace(/ /g, "").split(",") || [];
+    const updatedPost = await database.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.postsCollectionId,
+      post.postId,
+      {
+        caption: post.caption,
+        location: post.location,
+        tags: tags,
+        imageId: image.imageId,
+        imageUrl: image.imageUrl,
+      }
+    );
+    if (!updatedPost) {
+      await storage.deleteFile(appwriteConfig.storageId, post.imageId);
+    }
+    return updatedPost;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deletePost = async (postid: string, imageId: string) => {
+  if (!postid || !imageId) return;
+  try {
+    const deletedPost = await database.deleteDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.postsCollectionId,
+      postid
+    );
+    if (!deletedPost) throw Error;
+    await storage.deleteFile(appwriteConfig.storageId, imageId);
+
+    return { status: "ok" };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getInfinitePost = async ({ pageParam }: { pageParam: number }) => {
+  const queries = [Query.orderDesc("$updatedAt"), Query.limit(10)];
+  if (pageParam) queries.push(Query.cursorAfter(pageParam.toString()));
+  try {
+    const posts = await database.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.postsCollectionId,
+      queries
+    );
+    if (!posts) throw Error;
+    return posts;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const searchPostsByCaption = async (searchValue: string) => {
+  try {
+    const posts = await database.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.postsCollectionId,
+      [Query.search("caption", searchValue)]
+    );
+    if (!posts) throw Error;
+    return posts;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const searchPostsByTags = async (searchValue: string) => {
+  try {
+    const posts = await database.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.postsCollectionId,
+      [Query.search("tags", searchValue)]
+    );
+    if (!posts) throw Error;
+    return posts;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const searchPostsByUsername = async (searchValue: string) => {
+  try {
+    const posts = await database.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.usersCollectionId,
+      [Query.search("username", searchValue)]
+    );
+    if (!posts) throw Error;
+    return posts;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const searchPostsByLocation = async (searchValue: string) => {
+  try {
+    const posts = await database.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.postsCollectionId,
+      [Query.search("location", searchValue)]
+    );
+    if (!posts) throw Error;
+    return posts;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getAllUsers = async () => {
+  try {
+    const allUsers = await database.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.usersCollectionId
+    );
+    if (!allUsers) throw Error;
+    return allUsers;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getUserByName = async (name: string) => {
+  try {
+    const allUsers = await database.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.usersCollectionId,
+      ["username", name]
+    );
+    if (!allUsers) throw Error;
+    return allUsers;
   } catch (error) {
     console.log(error);
   }

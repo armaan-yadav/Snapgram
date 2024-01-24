@@ -34,15 +34,14 @@ const App = (props: Props) => {
         <Route element={<RouteLayout />}>
           <Route index element={<Home />} />
           <Route path="explore" element={<Explore />} />
-          <Route path="all-users" element={<People />} />
           <Route path="saved" element={<Saved />} />
           <Route path="create-post" element={<CreatePost />} />
-          <Route path="edit-post" element={<EditPost />} />
+          <Route path="edit-post/:id" element={<EditPost />} />
           <Route path="update-profile" element={<UpdateProfile />} />
           <Route path="all-users" element={<AllUsers />} />
           <Route path="profile" element={<Profile />} />
           <Route path="liked-posts" element={<LikedPosts />} />
-          <Route path="post-details" element={<PostDetails />} />
+          <Route path="post-details/:id" element={<PostDetails />} />
         </Route>
       </Routes>
       <Toaster />

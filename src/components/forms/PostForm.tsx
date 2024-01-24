@@ -18,18 +18,26 @@ import FileUploader from "../shared/FileUploader";
 import { Models } from "appwrite";
 import { useUserContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { useCreatePost } from "@/lib/tanstack-query/queriesAndMutations";
+import {
+  useCreatePost,
+  useDeletePost,
+  useUpdatePost,
+} from "@/lib/tanstack-query/queriesAndMutations";
+import { updatePost } from "@/lib/appwrite/api";
+import { toast } from "../ui/use-toast";
 
-const PostForm = ({ post }: { post?: Models.Document }) => {
+const PostForm = ({
+  post,
+  action,
+}: {
+  post?: Models.Document;
+  action: "update" | "create";
+}) => {
   const { user } = useUserContext();
   const navigate = useNavigate();
-  const {
-    mutateAsync: createPost,
-    isPending,
-    isIdle,
-    isSuccess,
-    isPaused,
-  } = useCreatePost();
+  const { mutateAsync: createPost, isPending: isPosting } = useCreatePost();
+  const { mutateAsync: updatePost, isPending: isUpdating } = useUpdatePost();
+  // const { mutateAsync: deletePost, isPending: isDeleting } = useDeletePost();
   // 1. Define your form.
   const form = useForm<z.infer<typeof PostFormValidation>>({
     resolver: zodResolver(PostFormValidation),
@@ -43,11 +51,27 @@ const PostForm = ({ post }: { post?: Models.Document }) => {
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof PostFormValidation>) {
-    const temp = { ...values, userId: user.id };
-    const newPost = await createPost(temp);
-    console.log(newPost);
-    if (newPost) {
-      navigate("/");
+    // console.log(values.tags.replace(/ /g, "").spl);
+    if (action == "create") {
+      const temp = { ...values, userId: user.id };
+      const newPost = await createPost(temp);
+      if (newPost) {
+        navigate("/");
+      }
+    }
+    if (post && action == "update") {
+      const updatedPost = await updatePost({
+        ...values,
+        imageId: post.imageId,
+        imageUrl: post.imageUrl,
+        postId: post.$id,
+      });
+
+      if (!updatedPost) {
+        return toast({ description: "Please try  again" });
+      }
+
+      return navigate(`/post-details/${post.$id}`);
     }
   }
 
@@ -128,12 +152,24 @@ const PostForm = ({ post }: { post?: Models.Document }) => {
             className="shad-button_dark_4"
             onClick={() => {
               form.reset();
+              action === "update" && navigate(`/post-details/${post?.$id}`);
+              action === "create" && navigate(`/`);
             }}
           >
             Cancel
           </Button>
-          <Button type="submit" className="shad-button_primary">
-            Submit
+          <Button
+            type="submit"
+            className="shad-button_primary"
+            disabled={isPosting || isUpdating}
+          >
+            {isPosting || isUpdating ? (
+              <img src="assets/icons/loader.svg" height={17} width={17} />
+            ) : action == "update" ? (
+              "Update"
+            ) : (
+              "Post"
+            )}
           </Button>
         </div>
       </form>
