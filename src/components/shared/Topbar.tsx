@@ -14,8 +14,8 @@ const Topbar = () => {
     }
   }, [isSuccess]);
   return (
-    <section className="topbar w-full bg-slate-300">
-      <div className="flex-between py-4 px-5 bg-green-400 ">
+    <section className="topbar w-full ">
+      <div className="flex-between py-4 px-5  ">
         <Link to={"/"} className="items-center">
           <img
             src="/assets/images/logo.svg"

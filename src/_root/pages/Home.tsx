@@ -12,7 +12,7 @@ const Home = () => {
           {isPostsLoading && !posts ? (
             <img src="/assets/icons/loader.svg" alt="loader" />
           ) : (
-            <ul className="flex flex-col w-full flexn-1 gap-9 bg-blue-400">
+            <ul className="flex flex-col w-full flexn-1 gap-9 ">
               {posts?.documents.map((e: Models.Document) => {
                 return <PostCard post={e} key={e.$id} />;
               })}
