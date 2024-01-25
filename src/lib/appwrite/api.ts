@@ -291,22 +291,48 @@ export const deletePost = async (postid: string, imageId: string) => {
   }
 };
 
-export const getInfinitePost = async ({ pageParam }: { pageParam: number }) => {
-  const queries = [Query.orderDesc("$updatedAt"), Query.limit(10)];
-  if (pageParam) queries.push(Query.cursorAfter(pageParam.toString()));
+// export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
+//   const queries: any[] = [Query.limit(2)];
+//   console.log(pageParam);
+//   if (pageParam) {
+//     queries.push(Query.cursorAfter(pageParam.toString()));
+//   }
+
+//   try {
+//     const posts = await database.listDocuments(
+//       appwriteConfig.databaseId,
+//       appwriteConfig.postsCollectionId,
+//       queries
+//     );
+
+//     if (!posts) throw Error;
+
+//     return posts;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
+export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
+  const queries: any[] = [Query.orderDesc("$updatedAt"), Query.limit(9)];
+
+  if (pageParam) {
+    queries.push(Query.cursorAfter(pageParam.toString()));
+  }
+
   try {
     const posts = await database.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.postsCollectionId,
       queries
     );
+
     if (!posts) throw Error;
+
     return posts;
   } catch (error) {
     console.log(error);
   }
-};
-
+}
 export const searchPostsByCaption = async (searchValue: string) => {
   try {
     const posts = await database.listDocuments(
@@ -364,7 +390,8 @@ export const getAllUsers = async () => {
   try {
     const allUsers = await database.listDocuments(
       appwriteConfig.databaseId,
-      appwriteConfig.usersCollectionId
+      appwriteConfig.usersCollectionId,
+      [Query.orderAsc("$createdAt"), Query.limit(4)]
     );
     if (!allUsers) throw Error;
     return allUsers;
@@ -374,13 +401,13 @@ export const getAllUsers = async () => {
 };
 export const getUserByName = async (name: string) => {
   try {
-    const allUsers = await database.listDocuments(
+    const allUsersByUsername = await database.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.usersCollectionId,
-      ["username", name]
+      [Query.search("username", name)]
     );
-    if (!allUsers) throw Error;
-    return allUsers;
+    if (!allUsersByUsername) throw Error;
+    return allUsersByUsername;
   } catch (error) {
     console.log(error);
   }

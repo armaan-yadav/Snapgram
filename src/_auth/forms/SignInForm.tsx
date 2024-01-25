@@ -11,16 +11,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { SignInValidation, SignUpValidation } from "@/lib/validation";
+import { SignInValidation } from "@/lib/validation";
 import Loader from "@/components/shared/Loader";
 import { Link, useNavigate } from "react-router-dom";
-import { signInAccount } from "@/lib/appwrite/api";
 import { toast } from "@/components/ui/use-toast";
 import { useUserContext } from "@/components/context/AuthContext";
 import { useSignInAccount } from "@/lib/tanstack-query/queriesAndMutations";
-type Props = {};
 
-const SignUpForm = (props: Props) => {
+const SignUpForm = () => {
   const navigate = useNavigate();
   const { checkAuthUser } = useUserContext();
   const form = useForm<z.infer<typeof SignInValidation>>({

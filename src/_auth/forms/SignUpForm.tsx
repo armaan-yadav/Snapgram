@@ -21,9 +21,7 @@ import {
 } from "@/lib/tanstack-query/queriesAndMutations";
 import { useUserContext } from "@/components/context/AuthContext";
 
-type Props = {};
-
-const SignUpForm = (props: Props) => {
+const SignUpForm = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   // const isLoading = false;

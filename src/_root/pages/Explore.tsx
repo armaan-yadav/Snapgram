@@ -1,22 +1,21 @@
 import { Input } from "@/components/ui/input";
 import useDebounce from "@/hooks/useDebounce";
 import {
-  useGetInfinitePosts,
+  useGetPosts,
   useSearchPostsByCaption,
   useSearchPostsByLocation,
   useSearchPostsByTags,
-  useSearchPostsByUsername,
 } from "@/lib/tanstack-query/queriesAndMutations";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import GridPostsList from "./GridPostsList";
 import SearchResults from "./SearchResults";
-import Loader from "@/components/shared/Loader";
-import { Button } from "@/components/ui/button";
-import { searchPostsByLocation } from "@/lib/appwrite/api";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useInView } from "react-intersection-observer";
+import { Loader } from "lucide-react";
 
 const Explore = () => {
-  const { data: posts, fetchNextPage, hasNextPage } = useGetInfinitePosts();
+  const { ref, inView } = useInView();
+  const { data: posts, fetchNextPage, hasNextPage } = useGetPosts();
   const [searchValue, setSearchValue] = useState<string>("");
   const debouncedValue = useDebounce(searchValue, 500);
   const {
@@ -29,12 +28,12 @@ const Explore = () => {
     data: searchedPostsByLocation,
     isFetching: isSearchByLocationFetching,
   } = useSearchPostsByLocation(debouncedValue);
-  // const {
-  //   data: searchedPostsByUsername,
-  //   isFetching: isSearchByUsernameFetching,
-  // } = useSearchPostsByUsername(debouncedValue);
+  useEffect(() => {
+    if (inView && !searchValue) {
+      fetchNextPage();
+    }
+  }, [inView, searchValue]);
 
-  const [show, setShow] = useState("caption");
   if (!posts) {
     return (
       <div className="flex-center h-full w-full">
@@ -136,6 +135,11 @@ const Explore = () => {
           </>
         )}
       </div>
+      {hasNextPage && !searchValue && (
+        <div ref={ref} className="mt-10">
+          <Loader />
+        </div>
+      )}
     </div>
   );
 };

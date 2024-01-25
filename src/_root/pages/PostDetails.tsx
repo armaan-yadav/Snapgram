@@ -1,9 +1,7 @@
 import { useUserContext } from "@/components/context/AuthContext";
 import PostStats from "@/components/shared/PostStats";
-import { toast } from "@/components/ui/use-toast";
 import { useGetPostById } from "@/lib/tanstack-query/queriesAndMutations";
 import { timeAgo } from "@/lib/utils";
-import { ToastAction } from "@radix-ui/react-toast";
 import { Loader } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 

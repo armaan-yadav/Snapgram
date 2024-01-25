@@ -1,16 +1,9 @@
 import PostCard from "@/components/shared/PostCard";
 import { useGetRecentPosts } from "@/lib/tanstack-query/queriesAndMutations";
 import { Models } from "appwrite";
-import { useState } from "react";
 
-type Props = {};
-
-const Home = (props: Props) => {
-  const {
-    data: posts,
-    isPending: isPostsLoading,
-    isError: isPostsError,
-  } = useGetRecentPosts();
+const Home = () => {
+  const { data: posts, isPending: isPostsLoading } = useGetRecentPosts();
   return (
     <div className="flex flex-1">
       <div className="home-container ">

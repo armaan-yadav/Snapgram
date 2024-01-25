@@ -1,6 +1,6 @@
 import { timeAgo } from "@/lib/utils";
 import { Models } from "appwrite";
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useUserContext } from "../context/AuthContext";
 import PostStats from "./PostStats";

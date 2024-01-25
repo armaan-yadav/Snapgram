@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -20,10 +19,8 @@ import { useUserContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import {
   useCreatePost,
-  useDeletePost,
   useUpdatePost,
 } from "@/lib/tanstack-query/queriesAndMutations";
-import { updatePost } from "@/lib/appwrite/api";
 import { toast } from "../ui/use-toast";
 
 const PostForm = ({

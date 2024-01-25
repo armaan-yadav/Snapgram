@@ -6,7 +6,6 @@ import {
   Home,
   Explore,
   CreatePost,
-  People,
   Saved,
   EditPost,
   UpdateProfile,
@@ -18,9 +17,8 @@ import {
 import AuthLayout from "./_auth/AuthLayout";
 import RouteLayout from "./_root/RootLayout";
 import { Toaster } from "@/components/ui/toaster";
-type Props = {};
 
-const App = (props: Props) => {
+const App = () => {
   return (
     <main className="flex h-screen ">
       <Routes>
@@ -39,7 +37,7 @@ const App = (props: Props) => {
           <Route path="edit-post/:id" element={<EditPost />} />
           <Route path="update-profile" element={<UpdateProfile />} />
           <Route path="all-users" element={<AllUsers />} />
-          <Route path="profile" element={<Profile />} />
+          <Route path="profile/:id" element={<Profile />} />
           <Route path="liked-posts" element={<LikedPosts />} />
           <Route path="post-details/:id" element={<PostDetails />} />
         </Route>
