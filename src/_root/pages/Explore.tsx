@@ -7,7 +7,7 @@ import {
   useSearchPostsByTags,
 } from "@/lib/tanstack-query/queriesAndMutations";
 import { useEffect, useState } from "react";
-import GridPostsList from "./GridPostsList";
+import GridPostsList from "../../components/shared/GridPostsList";
 import SearchResults from "./SearchResults";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useInView } from "react-intersection-observer";
@@ -89,7 +89,7 @@ const Explore = () => {
             )} */}
             <Tabs defaultValue="caption" className="w-[400px] ">
               <TabsList className="flex-between my-4 text-light-1">
-                <TabsTrigger value="caption">Caption</TabsTrigger>
+                <TabsTrigger value="caption" >Caption</TabsTrigger>
                 <TabsTrigger value="tags">Tags</TabsTrigger>
                 <TabsTrigger value="location">Location</TabsTrigger>
               </TabsList>

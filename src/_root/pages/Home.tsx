@@ -6,7 +6,7 @@ const Home = () => {
   const { data: posts, isPending: isPostsLoading } = useGetRecentPosts();
   return (
     <div className="flex flex-1">
-      <div className="flex flex-col flex-1 items-center gap-10 overflow-scroll py-10 px-1 md:px-8 lg:p-14 custom-scrollbar w-full ">
+      <div className="home-container w-full ">
         <h2 className="h3-bold md:h2-bold w-full text-left">
           Home Feed
           {isPostsLoading && !posts ? (

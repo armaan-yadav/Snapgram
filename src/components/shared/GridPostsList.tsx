@@ -13,19 +13,18 @@ const GridPostsList = ({
   showStats?: boolean;
 }) => {
   const { user } = useUserContext();
-  // console.log(posts);
   return !posts ? (
     <div className="w-full h-full flex-center">
       <Loader />
     </div>
   ) : (
     <ul className="grid-container">
-      {posts.map((post) => {
+      {posts?.map((post) => {
         return (
           <li key={post.$id} className="relative min-w-80 h-80  ">
             <Link to={`/post-details/${post.$id}`} className="grid-post_link">
               <img
-                src={post.imageUrl}
+                src={post?.imageUrl}
                 alt="post-image"
                 className="h-full w-full object-cover"
               />
@@ -35,10 +34,10 @@ const GridPostsList = ({
                 {showUser && (
                   <div className="flex-start gap-3 flex-1">
                     <img
-                      src={post.creator.imageUrl}
+                      src={post?.creator?.imageUrl}
                       className="h-8 w-8 rounded-full"
                     />
-                    <p>{post.creator.username}</p>
+                    <p>{post?.creator?.username}</p>
                   </div>
                 )}
                 {showStats && <PostStats userId={user.id} post={post} />}

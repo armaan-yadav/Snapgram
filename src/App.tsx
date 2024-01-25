@@ -11,7 +11,6 @@ import {
   UpdateProfile,
   AllUsers,
   Profile,
-  LikedPosts,
   PostDetails,
 } from "./_root/pages";
 import AuthLayout from "./_auth/AuthLayout";
@@ -38,7 +37,6 @@ const App = () => {
           <Route path="update-profile" element={<UpdateProfile />} />
           <Route path="all-users" element={<AllUsers />} />
           <Route path="profile/:id" element={<Profile />} />
-          <Route path="liked-posts" element={<LikedPosts />} />
           <Route path="post-details/:id" element={<PostDetails />} />
         </Route>
       </Routes>

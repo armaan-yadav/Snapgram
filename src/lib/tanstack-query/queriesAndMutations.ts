@@ -16,6 +16,8 @@ import {
   getPostById,
   getRecentPosts,
   getUserByName,
+  getUserSavedPosts,
+  getUserById,
   likePost,
   savePost,
   searchPostsByCaption,
@@ -239,5 +241,19 @@ export const useGetUserByName = (name: string) => {
     queryKey: [QUERY_KEYS.GET_USER_BY_NAME],
     queryFn: () => getUserByName(name),
     enabled: !!name,
+  });
+};
+
+export const useGetUserById = (id: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_USER_BY_ID],
+    queryFn: () => getUserById(id),
+  });
+};
+
+export const useGetUserSavedPosts = (id: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_USER_SAVED_POSTS],
+    queryFn: () => getUserSavedPosts(id),
   });
 };

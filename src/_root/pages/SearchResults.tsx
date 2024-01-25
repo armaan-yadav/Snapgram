@@ -1,4 +1,4 @@
-import GridPostsList from "./GridPostsList";
+import GridPostsList from "../../components/shared/GridPostsList";
 import { Models } from "appwrite";
 
 const SearchResults = ({

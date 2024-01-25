@@ -291,27 +291,6 @@ export const deletePost = async (postid: string, imageId: string) => {
   }
 };
 
-// export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
-//   const queries: any[] = [Query.limit(2)];
-//   console.log(pageParam);
-//   if (pageParam) {
-//     queries.push(Query.cursorAfter(pageParam.toString()));
-//   }
-
-//   try {
-//     const posts = await database.listDocuments(
-//       appwriteConfig.databaseId,
-//       appwriteConfig.postsCollectionId,
-//       queries
-//     );
-
-//     if (!posts) throw Error;
-
-//     return posts;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// }
 export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
   const queries: any[] = [Query.orderDesc("$updatedAt"), Query.limit(9)];
 
@@ -408,6 +387,34 @@ export const getUserByName = async (name: string) => {
     );
     if (!allUsersByUsername) throw Error;
     return allUsersByUsername;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getUserById = async (id: string) => {
+  try {
+    const user = await database.getDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.usersCollectionId,
+      id
+    );
+    if (!user) throw Error;
+    return user;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getUserSavedPosts = async (id: string) => {
+  try {
+    const saved = await database.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.savesCollectionId,
+      [Query.equal("user", id)]
+    );
+    if (!saved) throw Error;
+    return saved;
   } catch (error) {
     console.log(error);
   }
