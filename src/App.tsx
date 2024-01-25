@@ -20,7 +20,7 @@ import { Toaster } from "@/components/ui/toaster";
 
 const App = () => {
   return (
-    <main className="flex h-screen ">
+    <main className="flex h-screen w-full bg-red">
       <Routes>
         {/* Public Routes */}
         <Route element={<AuthLayout />}>
