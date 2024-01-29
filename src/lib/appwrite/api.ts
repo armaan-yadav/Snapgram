@@ -1,6 +1,8 @@
 import { INewPost, INewUser, IUpdatePost } from "@/types";
 import { account, appwriteConfig, avatars, database, storage } from "./config";
 import { Query, ID } from "appwrite";
+
+//-------------- Authentication
 export async function createUserAccount(user: INewUser) {
   try {
     const newAccount = await account.create(
@@ -25,7 +27,6 @@ export async function createUserAccount(user: INewUser) {
     return error;
   }
 }
-
 export async function saveUserToDB(user: {
   accountId: string;
   name: string;
@@ -46,7 +47,6 @@ export async function saveUserToDB(user: {
     console.log(error);
   }
 }
-
 export const signInAccount = async ({
   email,
   password,
@@ -90,6 +90,7 @@ export const getCurrentUser = async () => {
   }
 };
 
+//-------------- File Upload
 export const uploadFile = async (file: File) => {
   try {
     const uploadedFile = await storage.createFile(
@@ -158,17 +159,7 @@ export const createPost = async (post: INewPost) => {
   }
 };
 
-export const getRecentPosts = async () => {
-  const posts = await database.listDocuments(
-    appwriteConfig.databaseId,
-    appwriteConfig.postsCollectionId,
-    [Query.orderDesc("$createdAt"), Query.limit(20)]
-  );
-
-  if (!posts) throw Error;
-  return posts;
-};
-
+//-------------- Post
 export const likePost = async (postId: string, likesArray: string[]) => {
   try {
     const updatedPost = await database.updateDocument(
@@ -216,21 +207,6 @@ export const deleteSavedPost = async (savedPostId: string) => {
     console.log(error);
   }
 };
-
-export const getPostById = async (postId: string) => {
-  try {
-    const postDetails = await database.getDocument(
-      appwriteConfig.databaseId,
-      appwriteConfig.postsCollectionId,
-      postId
-    );
-    if (!postDetails) throw Error;
-    return postDetails;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 export const updatePost = async (post: IUpdatePost) => {
   const hasFileToUpdate = post.file.length > 0;
   try {
@@ -291,27 +267,7 @@ export const deletePost = async (postid: string, imageId: string) => {
   }
 };
 
-export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
-  const queries: any[] = [Query.orderDesc("$updatedAt"), Query.limit(9)];
-
-  if (pageParam) {
-    queries.push(Query.cursorAfter(pageParam.toString()));
-  }
-
-  try {
-    const posts = await database.listDocuments(
-      appwriteConfig.databaseId,
-      appwriteConfig.postsCollectionId,
-      queries
-    );
-
-    if (!posts) throw Error;
-
-    return posts;
-  } catch (error) {
-    console.log(error);
-  }
-}
+//-------------- Searching
 export const searchPostsByCaption = async (searchValue: string) => {
   try {
     const posts = await database.listDocuments(
@@ -365,11 +321,12 @@ export const searchPostsByLocation = async (searchValue: string) => {
   }
 };
 
+//-------------- Get Data
 export const getAllUsers = async () => {
   try {
     const allUsers = await database.listDocuments(
       appwriteConfig.databaseId,
-      appwriteConfig.usersCollectionId,
+      appwriteConfig.usersCollectionId
       // [Query.orderAsc("$createdAt"), Query.limit(4)]
     );
     if (!allUsers) throw Error;
@@ -415,6 +372,60 @@ export const getUserSavedPosts = async (id: string) => {
     );
     if (!saved) throw Error;
     return saved;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getPostById = async (postId: string) => {
+  try {
+    const postDetails = await database.getDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.postsCollectionId,
+      postId
+    );
+    if (!postDetails) throw Error;
+    return postDetails;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
+  const queries: any[] = [Query.orderDesc("$updatedAt"), Query.limit(5)];
+
+  if (pageParam) {
+    queries.push(Query.cursorAfter(pageParam.toString()));
+  }
+
+  try {
+    const posts = await database.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.postsCollectionId,
+      queries
+    );
+
+    if (!posts) throw Error;
+
+    return posts;
+  } catch (error) {
+    console.log(error);
+  }
+}
+export const getRecentPosts = async ({ pageparam }: { pageparam: number }) => {
+  const queries: any[] = [Query.orderAsc("$updatedAt"), Query.limit(5)];
+
+  if (pageparam) {
+    queries.push(Query.cursorAfter(pageparam.toString()));
+  }
+
+  try {
+    const posts = await database.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.postsCollectionId,
+      // [Query.orderDesc("$createdAt"), Query.limit(4)]
+      queries
+    );
+    if (!posts) throw Error;
+    return posts;
   } catch (error) {
     console.log(error);
   }

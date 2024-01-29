@@ -1,6 +1,6 @@
 import { timeAgo } from "@/lib/utils";
 import { Models } from "appwrite";
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useUserContext } from "../context/AuthContext";
 import PostStats from "./PostStats";
@@ -57,15 +57,15 @@ const PostCard = ({ post }: { post: Models.Document }) => {
       <PostStats post={post} userId={user.id} />
       <div className="small-medium lg:base-medium py-5">
         <p>{post?.caption}</p>
-        <ul className="flex gap-1 mt-2">
+        <div className="w-full mt-2 text-wrap">
           {post?.tags.map((tag: string) => {
             return (
-              <li key={tag} className="text-light-3">
-                {`#` + tag}
-              </li>
+              <span key={tag} className="text-light-3 ">
+                {`#` + tag + ` `}
+              </span>
             );
           })}
-        </ul>
+        </div>
       </div>
     </div>
   );

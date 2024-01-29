@@ -30,12 +30,12 @@ import {
 } from "../appwrite/api";
 import { INewPost, INewUser, IUpdatePost } from "@/types";
 import { QUERY_KEYS } from "./queryKeys";
+//-------------- Authentication
 export const useCreateUserAccount = () => {
   return useMutation({
     mutationFn: (user: INewUser) => createUserAccount(user),
   });
 };
-
 export const useSignInAccount = () => {
   return useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) => {
@@ -58,6 +58,7 @@ export const useSignOutAccount = () => {
   });
 };
 
+//-------------- Post
 export const useCreatePost = () => {
   return useMutation({
     mutationFn: (post: INewPost) => {
@@ -65,14 +66,6 @@ export const useCreatePost = () => {
     },
   });
 };
-
-export const useGetRecentPosts = () => {
-  return useQuery({
-    queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
-    queryFn: getRecentPosts,
-  });
-};
-
 export const useLikedPost = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -150,14 +143,6 @@ export const useGetCurrentUser = () => {
   });
 };
 
-export const useGetPostById = (postId: string) => {
-  return useQuery({
-    queryKey: [QUERY_KEYS.GET_POST_BY_ID, postId],
-    queryFn: () => getPostById(postId),
-    enabled: !!postId,
-  });
-};
-
 export const useUpdatePost = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -182,26 +167,7 @@ export const useDeletePost = () => {
   });
 };
 
-export const useGetPosts = () => {
-  /* @ts-ignore */
-  {
-    return useInfiniteQuery({
-      queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
-      queryFn: getInfinitePosts as any,
-      getNextPageParam: (lastPage: any) => {
-        // If there's no data, there are no more pages.
-        if (lastPage && lastPage.documents.length === 0) {
-          return null;
-        }
-
-        // Use the $id of the last document as the cursor.
-        const lastId = lastPage.documents[lastPage.documents.length - 1].$id;
-        return lastId;
-      },
-    });
-  }
-};
-
+//-------------- Searching
 export const useSearchPostsByCaption = (searchValue: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.SEARCH_POSTS_BY_CAPTION, searchValue],
@@ -230,6 +196,8 @@ export const useSearchPostsByUsername = (searchValue: string) => {
     enabled: !!searchValue,
   });
 };
+
+//-------------- Get Data
 export const useGetAllUsers = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_USERS],
@@ -243,17 +211,78 @@ export const useGetUserByName = (name: string) => {
     enabled: !!name,
   });
 };
-
 export const useGetUserById = (id: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_USER_BY_ID],
     queryFn: () => getUserById(id),
   });
 };
-
 export const useGetUserSavedPosts = (id: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_USER_SAVED_POSTS],
     queryFn: () => getUserSavedPosts(id),
   });
+};
+export const useGetRecentPosts = () => {
+  /* @ts-ignore */
+  {
+    return useInfiniteQuery({
+      queryKey: [QUERY_KEYS.GET_INFINITE_POSTS_HOME],
+      queryFn: getRecentPosts as any,
+      getNextPageParam: (lastPage: any) => {
+        // If there's no data, there are no more pages.
+        if (lastPage && lastPage.documents.length === 0) {
+          return null;
+        }
+
+        // Use the $id of the last document as the cursor.
+        const lastId = lastPage.documents[lastPage.documents.length - 1].$id;
+        return lastId;
+      },
+    });
+  }
+};
+export const useGetPostById = (postId: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_POST_BY_ID, postId],
+    queryFn: () => getPostById(postId),
+    enabled: !!postId,
+  });
+};
+export const useGetPostsHome = () => {
+  /* @ts-ignore */
+  {
+    return useInfiniteQuery({
+      queryKey: [QUERY_KEYS.GET_INFINITE_POSTS_HOME],
+      queryFn: getInfinitePosts as any,
+      getNextPageParam: (lastPage: any) => {
+        // If there's no data, there are no more pages.
+        if (lastPage && lastPage.documents.length === 0) {
+          return null;
+        }
+        // Use the $id of the last document as the cursor.
+        const lastId = lastPage.documents[lastPage.documents.length - 1].$id;
+        return lastId;
+      },
+    });
+  }
+};
+export const useGetPosts = () => {
+  /* @ts-ignore */
+  {
+    return useInfiniteQuery({
+      queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
+      queryFn: getInfinitePosts as any,
+      getNextPageParam: (lastPage: any) => {
+        // If there's no data, there are no more pages.
+        if (lastPage && lastPage.documents.length === 0) {
+          return null;
+        }
+
+        // Use the $id of the last document as the cursor.
+        const lastId = lastPage.documents[lastPage.documents.length - 1].$id;
+        return lastId;
+      },
+    });
+  }
 };
