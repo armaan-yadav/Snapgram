@@ -24,12 +24,17 @@ import { useUserContext } from "@/components/context/AuthContext";
 const SignUpForm = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  // const isLoading = false;
   const { checkAuthUser } = useUserContext();
-
-  const { mutateAsync: createUserAccount, isPending: isCreating } =
-    useCreateUserAccount();
-  const { mutateAsync: signInAccount } = useSignInAccount();
+  const {
+    mutateAsync: createUserAccount,
+    isPending: isCreating,
+    isSuccess: isCreated,
+  } = useCreateUserAccount();
+  const {
+    mutateAsync: signInAccount,
+    isPending: isSigningIn,
+    isSuccess: isSigningDone,
+  } = useSignInAccount();
   const form = useForm<z.infer<typeof SignUpValidation>>({
     resolver: zodResolver(SignUpValidation),
     defaultValues: {
@@ -42,10 +47,11 @@ const SignUpForm = () => {
 
   async function onSubmit(values: z.infer<typeof SignUpValidation>) {
     const newUser = await createUserAccount(values);
+    console.log(isCreated, isCreating);
     console.log(newUser);
     if (!newUser)
       return toast({ description: "Sign Up failed. Please try again." });
-    const session = signInAccount({
+    const session = await signInAccount({
       email: values.email,
       password: values.password,
     });

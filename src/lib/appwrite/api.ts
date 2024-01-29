@@ -370,7 +370,7 @@ export const getAllUsers = async () => {
     const allUsers = await database.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.usersCollectionId,
-      [Query.orderAsc("$createdAt"), Query.limit(4)]
+      // [Query.orderAsc("$createdAt"), Query.limit(4)]
     );
     if (!allUsers) throw Error;
     return allUsers;

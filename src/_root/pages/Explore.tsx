@@ -64,32 +64,9 @@ const Explore = () => {
       <div className="w-full max-w-5xl flex flex-wrap gap-9">
         {shouldShowSearchResults ? (
           <>
-            {/* <div className="w-full flex-between">
-              <Button onClick={() => setShow("caption")}>Caption</Button>
-              <Button onClick={() => setShow("tags")}>Tags</Button>
-              <Button onClick={() => setShow("location")}>Location</Button>
-            </div>
-            {show == "caption" && (
-              <SearchResults
-                searchedPosts={searchedPostsByCaption}
-                isSearchFetching={isSearchByCaptionFetching}
-              />
-            )}
-            {show == "tags" && (
-              <SearchResults
-                searchedPosts={searchedPostsByTags}
-                isSearchFetching={isSearchByTagsFetching}
-              />
-            )}
-            {show == "location" && (
-              <SearchResults
-                searchedPosts={searchedPostsByLocation}
-                isSearchFetching={isSearchByLocationFetching}
-              />
-            )} */}
-            <Tabs defaultValue="caption" className="w-[400px] ">
+            <Tabs defaultValue="caption" className="w-full ">
               <TabsList className="flex-between my-4 text-light-1">
-                <TabsTrigger value="caption" >Caption</TabsTrigger>
+                <TabsTrigger value="caption">Caption</TabsTrigger>
                 <TabsTrigger value="tags">Tags</TabsTrigger>
                 <TabsTrigger value="location">Location</TabsTrigger>
               </TabsList>

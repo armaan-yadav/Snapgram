@@ -28,8 +28,11 @@ const SignUpForm = () => {
       password: "",
     },
   });
-  const { mutateAsync: signInAccount, isPending: isSigningIn } =
-    useSignInAccount();
+  const {
+    mutateAsync: signInAccount,
+    isPending: isSigningIn,
+    isSuccess,
+  } = useSignInAccount();
 
   async function onSubmit(values: z.infer<typeof SignInValidation>) {
     const session = await signInAccount(values);

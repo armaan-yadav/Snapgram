@@ -8,7 +8,18 @@ const SearchResults = ({
   isSearchFetching: boolean;
 }) => {
   return searchedPosts ? (
-    <GridPostsList posts={searchedPosts} />
+    <>
+      {searchedPosts.length !== 0 ? (
+        <div className="w-full ">
+          {" "}
+          <GridPostsList posts={searchedPosts} />
+        </div>
+      ) : (
+        <div className="w-full h-[50vh]  flex-center flex-1">
+          No Posts Found
+        </div>
+      )}
+    </>
   ) : (
     <div className="h-full w-full flex-center">
       <img src="/assets/icons/loader.svg" alt="" />
