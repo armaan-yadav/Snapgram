@@ -31,7 +31,6 @@ const SignUpForm = () => {
   const {
     mutateAsync: signInAccount,
     isPending: isSigningIn,
-    isSuccess,
   } = useSignInAccount();
 
   async function onSubmit(values: z.infer<typeof SignInValidation>) {

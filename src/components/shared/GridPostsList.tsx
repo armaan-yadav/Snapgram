@@ -1,7 +1,6 @@
 import { useUserContext } from "@/components/context/AuthContext";
 import PostStats from "@/components/shared/PostStats";
 import { Models } from "appwrite";
-import { log } from "console";
 import { Loader } from "lucide-react";
 import { Link } from "react-router-dom";
 import NotFound from "./NotFound";
@@ -23,7 +22,7 @@ const GridPostsList = ({
   ) : (
     <>
       {posts.length === 0 ? (
-      <NotFound text="No Posts" image="posts" />
+        <NotFound text="No Posts" image="posts" />
       ) : (
         <ul className="grid-container">
           {posts?.map((post) => {

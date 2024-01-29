@@ -1,11 +1,7 @@
-import { useUserContext } from "@/components/context/AuthContext";
 import {
   useGetCurrentUser,
-  useGetUserById,
-  useGetUserSavedPosts,
 } from "@/lib/tanstack-query/queriesAndMutations";
 import { Models } from "appwrite";
-import GridPostsList from "@/components/shared/GridPostsList";
 import LikedPosts from "@/components/shared/LikedPosts";
 import NotFound from "@/components/shared/NotFound";
 

@@ -32,8 +32,6 @@ const SignUpForm = () => {
   } = useCreateUserAccount();
   const {
     mutateAsync: signInAccount,
-    isPending: isSigningIn,
-    isSuccess: isSigningDone,
   } = useSignInAccount();
   const form = useForm<z.infer<typeof SignUpValidation>>({
     resolver: zodResolver(SignUpValidation),

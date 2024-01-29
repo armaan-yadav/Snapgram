@@ -1,10 +1,9 @@
 import { useUserContext } from "@/components/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import {
-  useGetPostById,
   useGetUserById,
 } from "@/lib/tanstack-query/queriesAndMutations";
-import { Link, useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import GridPostsList from "../../components/shared/GridPostsList";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import LikedPosts from "@/components/shared/LikedPosts";
