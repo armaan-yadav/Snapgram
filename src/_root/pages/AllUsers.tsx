@@ -18,7 +18,7 @@ const AllUsers = () => {
   // console.log(allUsersBySearch?.documents);
   const {
     data: allUsers,
-    isFetching: isAllUsersFetching,
+
     hasNextPage,
     fetchNextPage,
   } = useGetAllUsers();

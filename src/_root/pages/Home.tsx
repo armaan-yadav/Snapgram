@@ -1,10 +1,6 @@
-import GridPostsList from "@/components/shared/GridPostsList";
-import PostCard from "@/components/shared/PostCard";
 import PostsCollection from "@/components/shared/PostsCollection";
 import {
-  useGetPosts,
   useGetPostsHome,
-  useGetRecentPosts,
 } from "@/lib/tanstack-query/queriesAndMutations";
 import { Loader } from "lucide-react";
 import { useEffect } from "react";
