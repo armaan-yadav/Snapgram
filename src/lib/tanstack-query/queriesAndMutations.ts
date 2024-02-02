@@ -199,22 +199,46 @@ export const useSearchPostsByUsername = (searchValue: string) => {
 
 //-------------- Get Data
 export const useGetAllUsers = () => {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: [QUERY_KEYS.GET_USERS],
-    queryFn: getAllUsers,
+    queryFn: getAllUsers as any,
+    getNextPageParam: (lastPage: any) => {
+      // If there's no data, there are no more pages.
+      if (lastPage && lastPage.documents.length === 0) {
+        return null;
+      }
+      // Use the $id of the last document as the cursor.
+      const lastId = lastPage.documents[lastPage.documents.length - 1].$id;
+      return lastId;
+    },
   });
 };
 export const useGetUserByName = (name: string) => {
-  return useQuery({
-    queryKey: [QUERY_KEYS.GET_USER_BY_NAME],
+  // return useQuery({
+  //   queryKey: [QUERY_KEYS.GET_USER_BY_NAME, name],
+  //   queryFn: () => getUserByName(name),
+  //   enabled: !!name,
+  // });
+  return useInfiniteQuery({
+    queryKey: [QUERY_KEYS.GET_USER_BY_NAME, name],
     queryFn: () => getUserByName(name),
+    getNextPageParam: (lastPage: any) => {
+      // If there's no data, there are no more pages.
+      if (lastPage && lastPage.documents.length === 0) {
+        return null;
+      }
+      // Use the $id of the last document as the cursor.
+      const lastId = lastPage.documents[lastPage.documents.length - 1].$id;
+      return lastId;
+    },
     enabled: !!name,
   });
 };
 export const useGetUserById = (id: string) => {
   return useQuery({
-    queryKey: [QUERY_KEYS.GET_USER_BY_ID],
+    queryKey: [QUERY_KEYS.GET_USER_BY_ID, id],
     queryFn: () => getUserById(id),
+    enabled: !!id,
   });
 };
 export const useGetUserSavedPosts = (id: string) => {

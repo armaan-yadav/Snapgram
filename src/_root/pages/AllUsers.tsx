@@ -4,16 +4,28 @@ import {
   useGetAllUsers,
   useGetUserByName,
 } from "@/lib/tanstack-query/queriesAndMutations";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SearchedUser from "@/components/shared/SearchedUser";
+import { useInView } from "react-intersection-observer";
+import { Loader } from "lucide-react";
 
 const AllUsers = () => {
+  const { inView, ref } = useInView();
   const [searchValue, setSearchValue] = useState("");
   const debouncedValue = useDebounce(searchValue, 500);
   const { data: allUsersBySearch, isFetching: isAllUsersBySearchFetching } =
     useGetUserByName(debouncedValue);
-  const { data: allUsers, isFetching: isAllUsersFetching } = useGetAllUsers();
-
+  // console.log(allUsersBySearch?.documents);
+  const {
+    data: allUsers,
+    isFetching: isAllUsersFetching,
+    hasNextPage,
+    fetchNextPage,
+  } = useGetAllUsers();
+  // console.log(allUsers?.pages);
+  useEffect(() => {
+    fetchNextPage();
+  }, [inView]);
   return (
     <div className="explore-container">
       <div className="explore-inner_container">
@@ -29,47 +41,34 @@ const AllUsers = () => {
         </div>
         <div className="w-full">
           {searchValue === "" ? (
-            isAllUsersFetching ? (
-              <div className="w-full h-full flex-center">
-                <img src="/assets/icons/loader.svg" alt="" />
+            <>
+              <div className="w-full  gap-9 max-w-5xl mt-16 mb-7">
+                <p className="body-bold md:h3-bold w-full">Recently Joined</p>
               </div>
-            ) : (
-              <>
-                {" "}
-                <div className="w-full  gap-9 max-w-5xl mt-16 mb-7">
-                  <p className="body-bold md:h3-bold w-full">Recently Joined</p>
+              {allUsers?.pages.map((page, index) => {
+                return <SearchedUser users={page.documents} key={index} />;
+              })}
+              {hasNextPage && (
+                <div ref={ref} className="mt-10 w-full flex-center">
+                  <Loader />
                 </div>
-                <ul className="flex flex-col w-full gap-4">
-                  {allUsers?.documents.map((user) => {
-                    return (
-                      <SearchedUser
-                        key={user.$id}
-                        id={user.$id}
-                        username={user.username}
-                        imageUrl={user.imageUrl}
-                      />
-                    );
-                  })}
-                </ul>
-              </>
-            )
+              )}
+            </>
           ) : isAllUsersBySearchFetching ? (
             <div className="w-full h-full flex-center">
               <img src="/assets/icons/loader.svg" alt="" />
             </div>
           ) : (
-            <ul className="flex flex-col w-full gap-4">
-              {allUsersBySearch?.documents.map((user) => {
-                return (
-                  <SearchedUser
-                    key={user.$id}
-                    id={user?.$id}
-                    username={user?.username}
-                    imageUrl={user?.imageUrl}
-                  />
-                );
+            <>
+              {allUsersBySearch?.pages.map((page, index) => {
+                return <SearchedUser users={page?.documents!} key={index} />;
               })}
-            </ul>
+              {hasNextPage && (
+                <div ref={ref} className="mt-10 w-full flex-center">
+                  <Loader />
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>

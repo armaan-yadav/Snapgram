@@ -322,12 +322,18 @@ export const searchPostsByLocation = async (searchValue: string) => {
 };
 
 //-------------- Get Data
-export const getAllUsers = async () => {
+export const getAllUsers = async ({ pageParam }: { pageParam: number }) => {
+  const queries: any[] = [Query.orderDesc("$createdAt"), Query.limit(5)];
+
+  if (pageParam) {
+    queries.push(Query.cursorAfter(pageParam.toString()));
+  }
+
   try {
     const allUsers = await database.listDocuments(
       appwriteConfig.databaseId,
-      appwriteConfig.usersCollectionId
-      // [Query.orderAsc("$createdAt"), Query.limit(4)]
+      appwriteConfig.usersCollectionId,
+      queries
     );
     if (!allUsers) throw Error;
     return allUsers;
@@ -335,14 +341,32 @@ export const getAllUsers = async () => {
     console.log(error);
   }
 };
-export const getUserByName = async (name: string) => {
+export const getUserByName = async (name: string, pageParam: number) => {
+  // try {
+  //   const allUsersByUsername = await database.listDocuments(
+  //     appwriteConfig.databaseId,
+  //     appwriteConfig.usersCollectionId,
+  //     [Query.search("username", name)]
+  //   );
+  //   if (!allUsersByUsername) throw Error;
+  //   console.log(allUsersByUsername);
+  //   return allUsersByUsername;
+  // } catch (error) {
+  //   console.log(error);
+  // }
+  const queries: any[] = [Query.search("username", name), Query.limit(5)];
+
+  if (pageParam) {
+    queries.push(Query.cursorAfter(pageParam.toString()));
+  }
   try {
     const allUsersByUsername = await database.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.usersCollectionId,
-      [Query.search("username", name)]
+      queries
     );
     if (!allUsersByUsername) throw Error;
+    console.log(allUsersByUsername);
     return allUsersByUsername;
   } catch (error) {
     console.log(error);

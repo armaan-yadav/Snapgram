@@ -13,7 +13,6 @@ const Profile = () => {
   const { id } = useParams();
   const { data: user, isPending } = useGetUserById(id!);
   const { user: currentUser } = useUserContext();
-  // console.log(user);
 
   return isPending ? (
     <div className="w-full h-full flex-center">
